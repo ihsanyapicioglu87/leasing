@@ -1,7 +1,9 @@
 package com.allane.leasing.service;
 
+import com.allane.leasing.enums.ActionType;
 import com.allane.leasing.model.LeasingContract;
 import com.allane.leasing.repository.LeasingContractRepository;
+import com.allane.leasing.utils.AuditLogUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,20 +28,24 @@ public class LeasingContractService {
     }
 
     public LeasingContract createLeasingContract(LeasingContract leasingContract) {
-        return leasingContractRepository.save(leasingContract);
+        leasingContractRepository.save(leasingContract);
+        AuditLogUtils.logAction(ActionType.CREATE, LeasingContract.class.getSimpleName(), leasingContract.getId(), "ihsan");
+        return leasingContract;
     }
 
     public LeasingContract updateLeasingContract(Long id, LeasingContract updatedContract) {
         LeasingContract existingContract = leasingContractRepository.findById(id).orElse(null);
         if (existingContract != null) {
             existingContract = updatedContract;
-
-            return leasingContractRepository.save(existingContract);
+            leasingContractRepository.save(existingContract);
+            AuditLogUtils.logAction(ActionType.UPDATE, LeasingContract.class.getSimpleName(), id, "ihsan");
+            return existingContract;
         }
-        return null; // Or throw an exception indicating the contract was not found
+        return null;
     }
 
     public void deleteLeasingContract(Long id) {
         leasingContractRepository.deleteById(id);
+        AuditLogUtils.logAction(ActionType.DELETE, LeasingContract.class.getSimpleName(), id, "ihsan");
     }
 }

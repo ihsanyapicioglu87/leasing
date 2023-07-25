@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.14'
 	id 'io.spring.dependency-management' version '1.1.2'
+	id 'org.flywaydb.flyway' version '7.14.0'
 }
 
 group = 'com.allane'
@@ -10,6 +11,12 @@ version = '0.0.1-SNAPSHOT'
 java {
 	sourceCompatibility = '11'
 	targetCompatibility = '11'
+}
+
+flyway {
+	url = 'jdbc:mysql://localhost:3306/leasing'
+	user = 'root'
+	password = 'root'
 }
 
 repositories {
@@ -28,6 +35,10 @@ dependencies {
 	implementation 'org.projectlombok:lombok'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2'
 	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+	implementation 'org.flywaydb:flyway-core:7.14.0'
 }
 
 tasks.named('test') {

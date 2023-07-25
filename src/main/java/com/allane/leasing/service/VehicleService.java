@@ -1,7 +1,10 @@
 package com.allane.leasing.service;
 
+import com.allane.leasing.enums.ActionType;
+import com.allane.leasing.model.LeasingContract;
 import com.allane.leasing.model.Vehicle;
 import com.allane.leasing.repository.VehicleRepository;
+import com.allane.leasing.utils.AuditLogUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,19 +29,24 @@ public class VehicleService {
     }
 
     public Vehicle createVehicle(Vehicle vehicle) {
-        return vehicleRepository.save(vehicle);
+        vehicleRepository.save(vehicle);
+        AuditLogUtils.logAction(ActionType.CREATE, Vehicle.class.getSimpleName(), vehicle.getId(), "ihsan");
+        return vehicle;
     }
 
     public Vehicle updateVehicle(Long id, Vehicle updatedVehicle) {
         Vehicle existingVehicle = vehicleRepository.findById(id).orElse(null);
         if (existingVehicle != null) {
             existingVehicle = updatedVehicle;
-            return vehicleRepository.save(existingVehicle);
+            vehicleRepository.save(existingVehicle);
+            AuditLogUtils.logAction(ActionType.UPDATE, Vehicle.class.getSimpleName(), id, "ihsan");
+            return existingVehicle;
         }
-        return null; // Or throw an exception indicating the vehicle was not found
+        return null;
     }
 
     public void deleteVehicle(Long id) {
         vehicleRepository.deleteById(id);
+        AuditLogUtils.logAction(ActionType.DELETE, Vehicle.class.getSimpleName(), id, "ihsan");
     }
 }
