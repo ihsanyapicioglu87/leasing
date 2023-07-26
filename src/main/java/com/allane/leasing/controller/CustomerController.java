@@ -1,6 +1,6 @@
 package com.allane.leasing.controller;
 
-import com.allane.leasing.model.Customer;
+import com.allane.leasing.dto.CustomerDTO;
 import com.allane.leasing.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,23 +19,23 @@ public class CustomerController {
     }
 
     @GetMapping
-    public List<Customer> getAllCustomers() {
+    public List<CustomerDTO> getAllCustomers() {
         return customerService.getAllCustomers();
     }
 
     @GetMapping("/{id}")
-    public Customer getCustomerById(@PathVariable Long id) {
+    public CustomerDTO getCustomerById(@PathVariable Long id) {
         return customerService.getCustomerById(id);
     }
 
     @PostMapping
-    public Customer createCustomer(@RequestBody Customer customer) {
-        return customerService.createCustomer(customer);
+    public CustomerDTO createCustomer(@RequestBody CustomerDTO customerDTO) {
+        return customerService.createCustomer(customerDTO);
     }
 
-    @PutMapping("/update/{id}")
-    public Customer updateCustomer(@PathVariable Long id, @RequestBody Customer updatedCustomer) {
-        return customerService.updateCustomer(id, updatedCustomer);
+    @PutMapping("/update")
+    public CustomerDTO updateCustomer(@RequestBody CustomerDTO updatedCustomerDTO) {
+        return customerService.updateCustomer(updatedCustomerDTO);
     }
 
     @DeleteMapping("/delete/{id}")

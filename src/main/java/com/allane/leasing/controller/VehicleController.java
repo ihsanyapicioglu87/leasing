@@ -1,6 +1,6 @@
 package com.allane.leasing.controller;
 
-import com.allane.leasing.model.Vehicle;
+import com.allane.leasing.dto.VehicleDTO;
 import com.allane.leasing.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,23 +19,23 @@ public class VehicleController {
     }
 
     @GetMapping
-    public List<Vehicle> getAllVehicles() {
+    public List<VehicleDTO> getAllVehicles() {
         return vehicleService.getAllVehicles();
     }
 
     @GetMapping("/{id}")
-    public Vehicle getVehicleById(@PathVariable Long id) {
+    public VehicleDTO getVehicleById(@PathVariable Long id) {
         return vehicleService.getVehicleById(id);
     }
 
     @PostMapping
-    public Vehicle createVehicle(@RequestBody Vehicle vehicle) {
-        return vehicleService.createVehicle(vehicle);
+    public VehicleDTO createVehicle(@RequestBody VehicleDTO vehicleDTO) {
+        return vehicleService.createVehicle(vehicleDTO);
     }
 
-    @PutMapping("/update/{id}")
-    public Vehicle updateVehicle(@PathVariable Long id, @RequestBody Vehicle updatedVehicle) {
-        return vehicleService.updateVehicle(id, updatedVehicle);
+    @PutMapping("/update")
+    public VehicleDTO updateVehicle(@RequestBody VehicleDTO updatedVehicleDTO) {
+        return vehicleService.updateVehicle(updatedVehicleDTO);
     }
 
     @DeleteMapping("/delete/{id}")

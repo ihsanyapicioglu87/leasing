@@ -1,6 +1,6 @@
 package com.allane.leasing.controller;
 
-import com.allane.leasing.model.LeasingContract;
+import com.allane.leasing.dto.LeasingContractDTO;
 import com.allane.leasing.service.LeasingContractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,23 +19,23 @@ public class LeasingContractController {
     }
 
     @GetMapping
-    public List<LeasingContract> getAllLeasingContracts() {
+    public List<LeasingContractDTO> getAllLeasingContracts() {
         return leasingContractService.getAllLeasingContracts();
     }
 
     @GetMapping("/{id}")
-    public LeasingContract getLeasingContractById(@PathVariable Long id) {
+    public LeasingContractDTO getLeasingContractById(@PathVariable Long id) {
         return leasingContractService.getLeasingContractById(id);
     }
 
     @PostMapping
-    public LeasingContract createLeasingContract(@RequestBody LeasingContract leasingContract) {
-        return leasingContractService.createLeasingContract(leasingContract);
+    public LeasingContractDTO createLeasingContract(@RequestBody LeasingContractDTO leasingContractDTO) {
+        return leasingContractService.createLeasingContract(leasingContractDTO);
     }
 
-    @PutMapping("/update/{id}")
-    public LeasingContract updateLeasingContract(@PathVariable Long id, @RequestBody LeasingContract updatedContract) {
-        return leasingContractService.updateLeasingContract(id, updatedContract);
+    @PutMapping("/update")
+    public LeasingContractDTO updateLeasingContract(@RequestBody LeasingContractDTO leasingContractDTO) {
+        return leasingContractService.updateLeasingContract(leasingContractDTO);
     }
 
     @DeleteMapping("/delete/{id}")
