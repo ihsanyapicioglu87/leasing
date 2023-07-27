@@ -2,7 +2,10 @@ package com.allane.leasing.controller;
 
 import com.allane.leasing.dto.CustomerDTO;
 import com.allane.leasing.service.CustomerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/customers")
 public class CustomerController {
-
+    private final Logger LOG = LoggerFactory.getLogger(CustomerController.class);
     private final CustomerService customerService;
 
     @Autowired

@@ -32,13 +32,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.hibernate:hibernate-core'
 	implementation 'mysql:mysql-connector-java:8.0.33'
-	implementation 'org.projectlombok:lombok'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2'
-	annotationProcessor 'org.projectlombok:lombok'
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
-	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
-	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 	implementation 'org.flywaydb:flyway-core:7.14.0'
+	implementation 'org.slf4j:slf4j-api:1.7.32'
+	implementation 'ch.qos.logback:logback-classic:1.2.9'
 }
 
 tasks.named('test') {

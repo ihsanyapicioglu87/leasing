@@ -16,11 +16,11 @@ public class LeasingContract {
     @Column(name = "monthly_rate", nullable = false)
     private BigDecimal monthlyRate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @ManyToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 

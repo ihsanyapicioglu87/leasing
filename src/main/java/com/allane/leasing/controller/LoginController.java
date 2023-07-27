@@ -2,7 +2,6 @@ package com.allane.leasing.controller;
 
 import com.allane.leasing.repository.UserRepository;
 import com.allane.leasing.service.UserService;
-import com.allane.leasing.utils.JwtUtils;
 import com.allane.leasing.utils.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,9 +21,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/login")
 public class LoginController {
-    @Autowired
-    private JwtUtils jwtUtils;
-
     @Autowired
     private UserRepository userRepository;
 

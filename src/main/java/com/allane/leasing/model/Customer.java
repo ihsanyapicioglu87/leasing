@@ -20,7 +20,7 @@ public class Customer {
     @Column(name = "birthdate", nullable = false)
     private LocalDate birthdate;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer")
     private List<LeasingContract> leasingContracts;
 
     public Long getId() {

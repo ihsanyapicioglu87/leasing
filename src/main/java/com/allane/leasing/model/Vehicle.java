@@ -25,7 +25,7 @@ public class Vehicle {
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
-    @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "vehicle")
     private LeasingContract leasingContract;
 
     public Long getId() {

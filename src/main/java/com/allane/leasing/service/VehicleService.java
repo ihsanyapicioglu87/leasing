@@ -1,12 +1,16 @@
 package com.allane.leasing.service;
 
+import com.allane.leasing.dto.CustomerDTO;
 import com.allane.leasing.dto.VehicleDTO;
 import com.allane.leasing.enums.ActionType;
 import com.allane.leasing.exception.ResourceNotFoundException;
 import com.allane.leasing.exception.VehicleNotFoundException;
+import com.allane.leasing.model.Customer;
 import com.allane.leasing.model.Vehicle;
 import com.allane.leasing.repository.VehicleRepository;
 import com.allane.leasing.utils.AuditLogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -21,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class VehicleService {
+    private final Logger LOG = LoggerFactory.getLogger(VehicleService.class);
 
     private final VehicleRepository vehicleRepository;
 
@@ -31,6 +36,19 @@ public class VehicleService {
 
     public List<VehicleDTO> getAllVehicles() {
         List<Vehicle> vehicles = vehicleRepository.findAll();
+        if(LOG.isDebugEnabled()) {
+            LOG.debug("Retrieved vehicles from database. Size of the list: " + vehicles.size());
+        }
+        return vehicles.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<VehicleDTO> getAvailableVehicles() {
+        List<Vehicle> vehicles = vehicleRepository.findAllByLeasingContractIsNull();
+        if(LOG.isDebugEnabled()) {
+            LOG.debug("Retrieved vehicles from database. Size of the list: " + vehicles.size());
+        }
         return vehicles.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -39,6 +57,7 @@ public class VehicleService {
     public VehicleDTO getVehicleById(Long id) {
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with ID: " + id));
+        LOG.info("Vehicle retrieved with the id: " + id + ". Vehicle Info: " + vehicle.getBrand() + "-" + vehicle.getModel());
         return convertToDTO(vehicle);
     }
 
@@ -46,7 +65,11 @@ public class VehicleService {
         try {
             Vehicle vehicle = convertToEntity(vehicleDTO);
             vehicle = vehicleRepository.save(vehicle);
-            return convertToDTO(vehicle);
+            VehicleDTO newVehicleDTO = convertToDTO(vehicle);
+
+            AuditLogUtils.logAction(ActionType.CREATE, Vehicle.class.getSimpleName(), vehicle.getId(), "ihsan");
+            LOG.info("New vehicle has been created");
+            return newVehicleDTO;
         } catch (TransactionSystemException | JpaSystemException ex) {
             throw new RuntimeException("Error with transaction or JPA system: " + ex.getMessage(), ex);
         } catch (DataAccessException ex) {
@@ -67,7 +90,10 @@ public class VehicleService {
         try {
             Vehicle updatedVehicle = convertToEntity(updatedVehicleDTO);
             vehicleRepository.save(updatedVehicle);
-            return convertToDTO(updatedVehicle);
+            VehicleDTO newUpdatedVehicleDTO = convertToDTO(updatedVehicle);
+            AuditLogUtils.logAction(ActionType.UPDATE, Vehicle.class.getSimpleName(), id, "ihsan");
+            LOG.info("Vehicle has been updated with the id: " + id);
+            return newUpdatedVehicleDTO;
         } catch (TransactionSystemException | JpaSystemException ex) {
             throw new RuntimeException("Error with transaction or JPA system: " + ex.getMessage(), ex);
         } catch (DataAccessException ex) {
@@ -83,7 +109,8 @@ public class VehicleService {
     public void deleteVehicle(Long id) {
         try {
             vehicleRepository.deleteById(id);
-            AuditLogUtils.logAction(ActionType.DELETE, VehicleDTO.class.getSimpleName(), id, "ihsan");
+            AuditLogUtils.logAction(ActionType.DELETE, Vehicle.class.getSimpleName(), id, "ihsan");
+            LOG.info("Vehicle has been deleted with the id: " + id);
         } catch (EmptyResultDataAccessException ex) {
             throw new ResourceNotFoundException("VehicleDTO with id " + id + " not found.");
         } catch (DataAccessException ex) {
