@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public class LeasingContractDTO {
 
     private Long id;
-    private String contractNumber;
+    private String contractNo;
     private BigDecimal monthlyRate;
     private Long customerId;
     private Long vehicleId;
@@ -18,12 +18,12 @@ public class LeasingContractDTO {
         this.id = id;
     }
 
-    public String getContractNumber() {
-        return contractNumber;
+    public String getContractNo() {
+        return contractNo;
     }
 
-    public void setContractNumber(String contractNumber) {
-        this.contractNumber = contractNumber;
+    public void setContractNo(String contractNo) {
+        this.contractNo = contractNo;
     }
 
     public BigDecimal getMonthlyRate() {

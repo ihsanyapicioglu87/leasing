@@ -54,7 +54,7 @@ public class LeasingContractService {
     public LeasingContractDTO getLeasingContractById(Long id) {
         LeasingContract leasingContract = leasingContractRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Leasing contract not found with ID: " + id));
-        LOG.info("Leasing contract retrieved with the id: " + id + ". Contract number: " + leasingContract.getContractNumber());
+        LOG.info("Leasing contract retrieved with the id: " + id + ". Contract number: " + leasingContract.getContractNo());
         return convertToDTO(leasingContract);
     }
 
@@ -115,7 +115,7 @@ public class LeasingContractService {
     public LeasingContractDTO convertToDTO(LeasingContract leasingContract) {
         LeasingContractDTO leasingContractDTO = new LeasingContractDTO();
         leasingContractDTO.setId(leasingContract.getId());
-        leasingContractDTO.setContractNumber(leasingContract.getContractNumber());
+        leasingContractDTO.setContractNo(leasingContract.getContractNo());
         leasingContractDTO.setMonthlyRate(leasingContract.getMonthlyRate());
         leasingContractDTO.setCustomerId(leasingContract.getCustomer().getId());
         leasingContractDTO.setVehicleId(leasingContract.getVehicle().getId());
@@ -125,7 +125,7 @@ public class LeasingContractService {
     public LeasingContract convertToEntity(LeasingContractDTO leasingContractDTO) {
         LeasingContract leasingContract = new LeasingContract();
         leasingContract.setId(leasingContractDTO.getId());
-        leasingContract.setContractNumber(leasingContractDTO.getContractNumber());
+        leasingContract.setContractNo(leasingContractDTO.getContractNo());
         leasingContract.setMonthlyRate(leasingContractDTO.getMonthlyRate());
 
         Long customerId = leasingContractDTO.getCustomerId();

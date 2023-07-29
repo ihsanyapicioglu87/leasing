@@ -1,11 +1,10 @@
 package com.allane.leasing.service;
 
-import com.allane.leasing.dto.CustomerDTO;
 import com.allane.leasing.dto.VehicleDTO;
 import com.allane.leasing.enums.ActionType;
 import com.allane.leasing.exception.ResourceNotFoundException;
-import com.allane.leasing.exception.VehicleNotFoundException;
-import com.allane.leasing.model.Customer;
+import com.allane.leasing.model.Brand;
+import com.allane.leasing.model.Model;
 import com.allane.leasing.model.Vehicle;
 import com.allane.leasing.repository.VehicleRepository;
 import com.allane.leasing.utils.AuditLogUtils;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionSystemException;
 
 import javax.persistence.OptimisticLockException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,10 +28,14 @@ public class VehicleService {
     private final Logger LOG = LoggerFactory.getLogger(VehicleService.class);
 
     private final VehicleRepository vehicleRepository;
+    private final BrandService brandService;
+    private final ModelService modelService;
 
     @Autowired
-    public VehicleService(VehicleRepository vehicleRepository) {
+    public VehicleService(VehicleRepository vehicleRepository, BrandService brandService, ModelService modelService) {
         this.vehicleRepository = vehicleRepository;
+        this.brandService = brandService;
+        this.modelService = modelService;
     }
 
     public List<VehicleDTO> getAllVehicles() {
@@ -57,7 +61,7 @@ public class VehicleService {
     public VehicleDTO getVehicleById(Long id) {
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with ID: " + id));
-        LOG.info("Vehicle retrieved with the id: " + id + ". Vehicle Info: " + vehicle.getBrand() + "-" + vehicle.getModel());
+        LOG.info("Vehicle retrieved with the id: " + id + ". Vehicle Info: " + vehicle.getBrand().getName() + "-" + vehicle.getModel().getName());
         return convertToDTO(vehicle);
     }
 
@@ -123,8 +127,8 @@ public class VehicleService {
     public VehicleDTO convertToDTO(Vehicle vehicle) {
         VehicleDTO vehicleDTO = new VehicleDTO();
         vehicleDTO.setId(vehicle.getId());
-        vehicleDTO.setBrand(vehicle.getBrand());
         vehicleDTO.setModel(vehicle.getModel());
+        vehicleDTO.setBrand(vehicle.getBrand());
         vehicleDTO.setModelYear(vehicle.getModelYear());
         vehicleDTO.setVin(vehicle.getVin());
         vehicleDTO.setPrice(vehicle.getPrice());
@@ -134,11 +138,19 @@ public class VehicleService {
     public Vehicle convertToEntity(VehicleDTO vehicleDTO) {
         Vehicle vehicle = new Vehicle();
         vehicle.setId(vehicleDTO.getId());
-        vehicle.setBrand(vehicleDTO.getBrand());
         vehicle.setModel(vehicleDTO.getModel());
+        vehicle.setBrand(vehicleDTO.getBrand());
         vehicle.setModelYear(vehicleDTO.getModelYear());
         vehicle.setVin(vehicleDTO.getVin());
         vehicle.setPrice(vehicleDTO.getPrice());
         return vehicle;
+    }
+
+    public List<Model> getFilteredModels(Long brandId) {
+        Brand brand = brandService.getBrandById(brandId);
+        if (brand != null) {
+            return modelService.getModelsByBrand(brand.getId());
+        }
+        return Collections.emptyList();
     }
 }

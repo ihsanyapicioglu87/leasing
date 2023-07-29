@@ -1,8 +1,11 @@
 package com.allane.leasing.controller;
 
+import com.allane.leasing.dto.CustomerDTO;
 import com.allane.leasing.dto.VehicleDTO;
+import com.allane.leasing.model.Model;
 import com.allane.leasing.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +39,11 @@ public class VehicleController {
     @PutMapping("/update")
     public VehicleDTO updateVehicle(@RequestBody VehicleDTO updatedVehicleDTO) {
         return vehicleService.updateVehicle(updatedVehicleDTO);
+    }
+
+    @GetMapping("/filtered-models/{brandId}")
+    public List<Model> getFilteredModels(@PathVariable Long brandId) {
+        return vehicleService.getFilteredModels(brandId);
     }
 
     @DeleteMapping("/delete/{id}")

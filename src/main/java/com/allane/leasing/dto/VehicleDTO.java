@@ -1,12 +1,15 @@
 package com.allane.leasing.dto;
 
+import com.allane.leasing.model.Brand;
+import com.allane.leasing.model.Model;
+
 import java.math.BigDecimal;
 
 public class VehicleDTO {
 
     private Long id;
-    private String brand;
-    private String model;
+    private Model model;
+    private Brand brand;
     private int modelYear;
     private String vin;
     private BigDecimal price;
@@ -19,20 +22,20 @@ public class VehicleDTO {
         this.id = id;
     }
 
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public String getModel() {
+    public Model getModel() {
         return model;
     }
 
-    public void setModel(String model) {
+    public void setModel(Model model) {
         this.model = model;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
     }
 
     public int getModelYear() {

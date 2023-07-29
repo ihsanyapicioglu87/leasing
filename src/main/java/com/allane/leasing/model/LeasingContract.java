@@ -4,14 +4,15 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "customer_id", "vehicle_id" }))
 public class LeasingContract {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "contract_number", nullable = false, unique = true)
-    private String contractNumber;
+    @Column(name = "contract_no", nullable = false, unique = true)
+    private String contractNo;
 
     @Column(name = "monthly_rate", nullable = false)
     private BigDecimal monthlyRate;
@@ -32,12 +33,12 @@ public class LeasingContract {
         this.id = id;
     }
 
-    public String getContractNumber() {
-        return contractNumber;
+    public String getContractNo() {
+        return contractNo;
     }
 
-    public void setContractNumber(String contractNumber) {
-        this.contractNumber = contractNumber;
+    public void setContractNo(String contractNo) {
+        this.contractNo = contractNo;
     }
 
     public BigDecimal getMonthlyRate() {

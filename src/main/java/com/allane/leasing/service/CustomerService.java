@@ -59,17 +59,18 @@ public class CustomerService {
         try {
             Customer customer = convertToEntity(customerDTO);
             customer = customerRepository.save(customer);
-            CustomerDTO newCustomerDTO = convertToDTO(customer);
+            if (customer == null) {
+                throw new RuntimeException("Error while saving customer: The saved customer object is null.");
+            }
 
+            CustomerDTO newCustomerDTO = convertToDTO(customer);
             AuditLogUtils.logAction(ActionType.CREATE, Customer.class.getSimpleName(), customer.getId(), "ihsan");
             LOG.info("New customer has been created");
             return newCustomerDTO;
         } catch (DataAccessException ex) {
-            throw new RuntimeException(messageSource.getMessage("exception.access",
-                    null, Locale.getDefault()) + ex.getMessage(), ex);
+            throw new RuntimeException("Error accessing data: " + ex.getMessage(), ex);
         } catch (Exception ex) {
-            throw new RuntimeException(messageSource.getMessage("customer.save.exception",
-                    null, Locale.getDefault()) + ex.getMessage(), ex);
+            throw new RuntimeException("Unknown error occurred while creating customer: " + ex.getMessage(), ex);
         }
     }
 

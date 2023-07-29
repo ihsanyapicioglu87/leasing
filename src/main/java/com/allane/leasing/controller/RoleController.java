@@ -41,7 +41,7 @@ public class RoleController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Role> updateRole(@PathVariable Long id, @RequestBody Role role) throws RoleNotFoundException {
-        role.setId(id); // Set the ID from the path variable to the role object
+        role.setId(id);
         Role updatedRole = roleService.updateRole(role);
         return new ResponseEntity<>(updatedRole, HttpStatus.OK);
     }
