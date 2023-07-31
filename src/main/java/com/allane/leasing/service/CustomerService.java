@@ -1,12 +1,9 @@
 package com.allane.leasing.service;
 
-import com.allane.leasing.controller.CustomerController;
 import com.allane.leasing.dto.CustomerDTO;
 import com.allane.leasing.enums.ActionType;
 import com.allane.leasing.exception.ResourceNotFoundException;
 import com.allane.leasing.model.Customer;
-import com.allane.leasing.model.LeasingContract;
-import com.allane.leasing.repository.AuditLogRepository;
 import com.allane.leasing.repository.CustomerRepository;
 import com.allane.leasing.utils.AuditLogUtils;
 import org.slf4j.Logger;
@@ -30,9 +27,6 @@ public class CustomerService {
     private final MessageSource messageSource;
 
     @Autowired
-    private AuditLogRepository auditLogRepository;
-
-    @Autowired
     public CustomerService(CustomerRepository customerRepository, MessageSource messageSource) {
         this.customerRepository = customerRepository;
         this.messageSource = messageSource;
@@ -40,8 +34,9 @@ public class CustomerService {
 
     public List<CustomerDTO> getAllCustomers() {
         List<Customer> customers = customerRepository.findAll();
-        if(LOG.isDebugEnabled()) {
-            LOG.debug("Retrieved customers from database. Size of the list: " + customers.size());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(messageSource.getMessage("customer.retrieved",
+                    null, Locale.getDefault()) + customers.size());
         }
         return customers.stream()
                 .map(this::convertToDTO)
@@ -50,8 +45,10 @@ public class CustomerService {
 
     public CustomerDTO getCustomerById(Long id) {
         Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with ID: " + id));
-        LOG.info("Customer retrieved with the id: " + id + ". Customer info: " + customer.getFirstName() + " " +customer.getLastName());
+                .orElseThrow(() -> new ResourceNotFoundException(messageSource.getMessage("customer.notFound.exception",
+                        null, Locale.getDefault()) + id));
+        LOG.info(messageSource.getMessage("customer.found",
+                null, Locale.getDefault()) + id + ". Customer info: " + customer.getFirstName() + " " + customer.getLastName());
         return convertToDTO(customer);
     }
 
@@ -60,12 +57,14 @@ public class CustomerService {
             Customer customer = convertToEntity(customerDTO);
             customer = customerRepository.save(customer);
             if (customer == null) {
-                throw new RuntimeException("Error while saving customer: The saved customer object is null.");
+                throw new RuntimeException(messageSource.getMessage("customer.save.null.exception",
+                        null, Locale.getDefault()));
             }
 
             CustomerDTO newCustomerDTO = convertToDTO(customer);
             AuditLogUtils.logAction(ActionType.CREATE, Customer.class.getSimpleName(), customer.getId(), "ihsan");
-            LOG.info("New customer has been created");
+            LOG.info(messageSource.getMessage("customer.create.success",
+                    null, Locale.getDefault()));
             return newCustomerDTO;
         } catch (DataAccessException ex) {
             throw new RuntimeException("Error accessing data: " + ex.getMessage(), ex);
